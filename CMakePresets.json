@@ -1,0 +1,152 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 23,
+      "patch": 0
+    },
+    "configurePresets": [
+      {
+        "name": "base",
+        "hidden": true,
+        "displayName": "base Configuration",
+        "description": "Default build using Ninja generator",
+        "generator": "Ninja",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "installDir": "${sourceDir}/install/${presetName}",
+        "cacheVariables": {
+            "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+            "BUILD_SHARED_LIBS": "FALSE"
+            
+        }
+      },
+      {
+        "name": "base-msvc",
+        "hidden": true,
+        "displayName": "Visual Studio Base Configuration",
+        "description": "Default build using Visual Studio generator",
+        "generator": "Visual Studio 17 2022",
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "installDir": "${sourceDir}/install/${presetName}",
+        "cacheVariables": {
+            "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+            "BUILD_SHARED_LIBS": "FALSE"            
+        }
+      },
+      {
+        "name": "debug",
+        "hidden": true,
+        "cacheVariables": {
+             "CMAKE_BUILD_TYPE": "Debug"
+        }
+      },
+      {
+        "name": "release",
+        "hidden": true,
+        "cacheVariables": {
+             "CMAKE_BUILD_TYPE": "Release",
+             "BUILD_TESTING": "FALSE"
+        }
+      },
+      {
+          "name": "msvc",
+          "hidden": true,
+          "cacheVariables": {
+            "CMAKE_C_COMPILER": "cl.exe",
+              "CMAKE_CXX_COMPILER": "cl.exe"
+          },
+          "architecture": {
+            "value": "x64",
+            "strategy": "external"
+          }
+      },
+      {
+          "name": "gcc",
+          "hidden": true,
+          "cacheVariables": {
+              "CMAKE_CXX_COMPILER": "g++",
+              "CMAKE_C_COMPILER": "gcc"
+          }
+      },
+      {
+          "name": "clang",
+          "hidden": true,
+          "cacheVariables": {
+              "CMAKE_CXX_COMPILER": "clang++",
+              "CMAKE_C_COMPILER": "clang"
+          }
+      },
+      {
+          "name": "debug-msvc",
+          "displayName": "Debug (MSVC)",
+          "inherits": [
+              "base-msvc",
+              "debug",
+              "msvc"
+          ]
+      },
+      {
+          "name": "debug-gcc",
+          "displayName": "Debug (GCC)",
+          "inherits": [
+              "base",
+              "debug",
+              "gcc"
+          ]
+      },
+      {
+          "name": "release-gcc",
+          "displayName": "Release (GCC)",
+          "inherits": [
+              "base",
+              "release",
+              "gcc"
+          ]
+      },
+      {
+          "name": "debug-clang",
+          "displayName": "Debug (CLANG)",
+          "inherits": [
+              "base",
+              "debug",
+              "clang"
+          ]
+      },
+      {
+          "name": "release-msvc",
+          "displayName": "Release (MSVC)",
+          "inherits": [
+              "base-msvc",
+              "release",
+              "msvc"
+          ]
+      },
+      {
+          "name": "release-clang",
+          "displayName": "Release (CLANG)",
+          "inherits": [
+              "base",
+              "release",
+              "clang"
+          ]
+      }
+    ],
+    "buildPresets": [
+        {
+            "name": "build-debug-gcc",
+            "configurePreset": "debug-gcc"
+        },
+        {
+            "name": "build-release-gcc",
+            "configurePreset": "release-gcc"
+        },
+        {
+            "name": "build-debug-msvc",
+            "configurePreset": "debug-msvc"
+        },
+        {
+            "name": "build-release-msvc",
+            "configurePreset": "release-msvc"
+        }
+    ]
+  }
