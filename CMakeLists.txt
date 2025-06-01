@@ -10,11 +10,10 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 # Ortak cmake betiklerini alalim
 include(StandardOptions) # Standard ayarlar
 include(InsourceGuard) # Source icerisinde buildi onleme
-include(Config) # cmake icin kullanilabilecek diger ayarlar
 
 # Proje ismi, surum ve dil ayarlari
 project(
-    project_name
+    sdl-example
     VERSION 1.0.0
     LANGUAGES C CXX)
 
@@ -24,6 +23,10 @@ include(CompilerOptions)
 
 # CCache'e yonelik ekleme
 find_program(ccache_exe ccache) 
+
+# SDL3'u artık bu şekilde CMake betiklerimize dahil edebiliyor oalcağız
+find_package(SDL3 QUIET)
+include(Sdl3Finder)
 
 if(ccache_exe )
     message("CCACHE is found")
@@ -47,27 +50,6 @@ endif(ccache_exe )
 # compile_commands.json dosyasi olusturma kabiliyeti eklenir
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# SPDLogu indirelim
-include(FetchContent)
-FetchContent_Declare(
-    spdlog
-    GIT_REPOSITORY https://github.com/gabime/spdlog.git
-    GIT_TAG        v1.8.2)
-
-FetchContent_GetProperties(spdlog)
-
-if(NOT spdlog_POPULATED)
-    message("Cloning spdlod")
-    FetchContent_Populate(spdlog)
-    add_subdirectory(
-        ${spdlog_SOURCE_DIR}
-        ${spdlog_BINARY_DIR})
-endif()
-
 # Alt projeler
-add_subdirectory(lib)
+# add_subdirectory(lib)
 add_subdirectory(app)
-
-if(BUILD_TESTING)
-    add_subdirectory(test)    
-endif()

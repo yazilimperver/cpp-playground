@@ -1,18 +1,18 @@
-#include <iostream>
-#include <string>
+#include "sdl-application.h"
 
-#include <spdlog/spdlog.h>
-
-#include <function_lib.h>
-
-int main(int argc, char** argv) {
-    FunctionLib ff;
+int main(int argc, char* argv[]) {
+    Sdl3Application application;
     
-    if (2 == argc) {
-        spdlog::info("{}\n", ff.FancyFunc(std::stoi(argv[1])));
+    if (!application.Initialize()) {
+        return -1;
     }
-    else {
-        spdlog::info("No input given. Assume 1453.\n{}\n", ff.FancyFunc(42));
-    }
+    
+    std::cout << "Cikis icin Q tusuna basiniz!\n";
+    std::cout << "WASD tuslari ile yesil dikdortgen hareket ettirilebilir!\n";
+    std::cout << "Bu tuslar disindaki tuslar hareketi sonlandirir!\n";
+    
+    application.Run();
+    application.Shutdown();
+    
     return 0;
 }

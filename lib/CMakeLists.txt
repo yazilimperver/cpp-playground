@@ -1,17 +1,9 @@
-set(TARGET_NAME cmake-template-lib)
+set(TARGET_NAME sdl3-lib)
 
 include(GenerateExportHeader)
 
-# TODO Buraya DLL/SO icin opsiyon
-if(BUILD_SHARED_LIBS)
-    message ("Building ${TARGET_NAME} as shared library!")
-    add_library(${TARGET_NAME} SHARED "")
-else()
-    message ("Building ${TARGET_NAME} as static library!")
-    add_library(${TARGET_NAME} STATIC "")
-endif()
+add_library(${TARGET_NAME} STATIC "")
 
-generate_export_header(${TARGET_NAME} EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/exports/${TARGET_NAME}_export.h)
 
 set_target_properties( ${TARGET_NAME}
     PROPERTIES
@@ -25,12 +17,15 @@ set_target_properties(${TARGET_NAME}
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
 )
+
 # IDE'lere kolaylik olmasi acisindan bu sekilde eklemekte fayda var
 target_sources(${TARGET_NAME}
     PRIVATE
-        "src/function_lib.cpp"
+        src/sdl_lib.cpp
     PUBLIC
-        "include/function_lib.h"
+        include/sdl_control.h
+        include/sdl_lib.h
+        include/sdl_resource.h
 )
 
 target_include_directories(${TARGET_NAME}
@@ -41,4 +36,4 @@ target_include_directories(${TARGET_NAME}
     src
 )
 
-target_link_libraries(${TARGET_NAME} PRIVATE spdlog::spdlog)
+target_link_libraries(${TARGET_NAME} PRIVATE SDL3::SDL3)
