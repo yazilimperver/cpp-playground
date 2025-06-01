@@ -23,7 +23,7 @@ public:
     static Renderer& Instance();    
     static bool Initialize(SDL_Renderer* renderer);    
     static void Shutdown();    
-    SDL_Renderer* SDLRenderer() const;    
+    SDL_Renderer* GetSDLRenderer() const;    
     void Clear(SDL_Color color = {0, 0, 0, 255});    
     void Present();
 };

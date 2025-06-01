@@ -16,6 +16,6 @@ void RenderComponent::Render(Renderer& renderer) {
         auto* transform = mOwner->GetComponent<Transform>();
 
         if (transform)
-            mStrategy->Render(renderer.SDLRenderer(), *transform);
+            mStrategy->Render(renderer.GetSDLRenderer(), *transform);
     }
 }
