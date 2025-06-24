@@ -1,4 +1,4 @@
-#include "renderer.h"
+#include "sdl-renderer.h"
 
 #include <SDL3/SDL.h>
 #include <stdexcept>
@@ -27,7 +27,7 @@ void Renderer::Shutdown() {
     mInstance.reset();
 }
 
-SDL_Renderer* Renderer::SDLRenderer() const { 
+SDL_Renderer* Renderer::GetSDLRenderer() const { 
     return mRenderer.Get(); 
 }
 

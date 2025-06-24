@@ -27,3 +27,12 @@ target_include_directories(${TARGET_NAME}
 target_link_libraries(${TARGET_NAME}
     PRIVATE SDL3::SDL3
 )
+
+# Windows için gerekli DLL'leri yuklemek icin ekledigimiz komuttur
+if(WIN32)
+    add_custom_command(
+        TARGET ${TARGET_NAME} POST_BUILD
+        COMMAND "${CMAKE_COMMAND}" -E copy $<TARGET_FILE:SDL3::SDL3-shared> $<TARGET_FILE_DIR:${TARGET_NAME}>
+        VERBATIM
+    )
+endif()

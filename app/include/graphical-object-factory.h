@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "components.h"
-#include "renderer.h"
+#include "sdl-renderer.h"
 
 /** 
  * @brief GraphicalObject, oyun nesnelerini temsil eden ve bileşenleri yöneten sınıftır.
