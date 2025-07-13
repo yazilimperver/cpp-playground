@@ -38,6 +38,7 @@ TEST_F(SDLResourceTest, DestructorShouldCallDeleterWhenResourceIsValid) {
     EXPECT_EQ(delete_call_count, 1);
 }
 
+
 TEST_F(SDLResourceTest, DestructorShouldNotCallDeleterWhenResourceIsNull) {
     {
         Resource res(nullptr);

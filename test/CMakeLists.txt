@@ -21,6 +21,10 @@ add_executable(${TEST_TARGET_NAME} "src/sdl_resource_test.cpp")
 # GoogleTest icin en az C++14
 target_compile_features(${TEST_TARGET_NAME} PUBLIC cxx_std_17)
 
+# Kapsama analizi gerekli flagler
+target_compile_options(${TEST_TARGET_NAME} PRIVATE --coverage)
+target_link_options(${TEST_TARGET_NAME} PRIVATE --coverage)
+
 target_link_libraries(${TEST_TARGET_NAME} 
     GTest::gtest_main 
     sdl3-example-app-lib
