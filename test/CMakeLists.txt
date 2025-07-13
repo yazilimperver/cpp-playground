@@ -1,4 +1,4 @@
-set(TEST_TARGET_NAME cmake-template-test)
+set(TEST_TARGET_NAME sdl3-example-app-tests)
 
 # https://google.github.io/googletest/quickstart-cmake.html'de detaylar mevcut
 include(FetchContent)
@@ -16,14 +16,14 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 enable_testing()
 
 # Test projesi
-add_executable(${TEST_TARGET_NAME} "src/test_function_lib.cpp")
+add_executable(${TEST_TARGET_NAME} "src/sdl_resource_test.cpp")
 
 # GoogleTest icin en az C++14
-target_compile_features(${TEST_TARGET_NAME} PUBLIC cxx_std_11)
+target_compile_features(${TEST_TARGET_NAME} PUBLIC cxx_std_17)
 
 target_link_libraries(${TEST_TARGET_NAME} 
     GTest::gtest_main 
-    cmake-template-lib
+    sdl3-example-app-lib
 )
 
 include(GoogleTest)
