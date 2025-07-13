@@ -1,60 +1,103 @@
-TEST(SDLResourceTest, Constructor_ShouldCreateValidResource) {
-    bool destroyed = false;
-    {
-        auto* raw = new DummySDLType{42, &destroyed};
-        DummyResource res(raw);
-        EXPECT_TRUE(res.IsValid());
-        EXPECT_EQ(res.Get()->value, 42);
-        EXPECT_FALSE(destroyed);
+#include <gtest/gtest.h>
+#include <sdl-resource.h>
+
+// Sahte kaynak ve silici (deleter) fonksiyon
+struct MockResource {
+    int value;
+};
+
+static int delete_call_count = 0;
+void MockDeleter(MockResource* resource) {
+    if (resource) {
+        ++delete_call_count;
+        delete resource;
     }
-    EXPECT_TRUE(destroyed);
 }
 
-TEST(SDLResourceTest, MoveConstructor_ShouldTransferOwnership) {
-    bool destroyed = false;
-    auto* raw = new DummySDLType{99, &destroyed};
-    DummyResource res1(raw);
-    DummyResource res2(std::move(res1));
+using Resource = SDLResource<MockResource, MockDeleter>;
+
+class SDLResourceTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        delete_call_count = 0;
+    }
+};
+
+TEST_F(SDLResourceTest, ConstructorShouldStoreGivenResource) {
+    auto* raw = new MockResource{42};
+    Resource res(raw);
+    EXPECT_EQ(res.Get(), raw);
+    EXPECT_TRUE(res.IsValid());
+}
+
+TEST_F(SDLResourceTest, DestructorShouldCallDeleterWhenResourceIsValid) {
+    {
+        auto* raw = new MockResource{42};
+        Resource res(raw);
+    }
+    EXPECT_EQ(delete_call_count, 1);
+}
+
+TEST_F(SDLResourceTest, DestructorShouldNotCallDeleterWhenResourceIsNull) {
+    {
+        Resource res(nullptr);
+    }
+    EXPECT_EQ(delete_call_count, 0);
+}
+
+TEST_F(SDLResourceTest, MoveConstructorShouldTransferOwnership) {
+    auto* raw = new MockResource{42};
+    Resource res1(raw);
+    Resource res2(std::move(res1));
+
+    EXPECT_EQ(res2.Get(), raw);
     EXPECT_FALSE(res1.IsValid());
     EXPECT_TRUE(res2.IsValid());
-    EXPECT_EQ(res2.Get()->value, 99);
 }
 
-TEST(SDLResourceTest, MoveAssignment_ShouldTransferOwnershipAndDestroyOldResource) {
-    bool destroyed1 = false, destroyed2 = false;
-    auto* raw1 = new DummySDLType{1, &destroyed1};
-    auto* raw2 = new DummySDLType{2, &destroyed2};
-    DummyResource res1(raw1);
-    DummyResource res2(raw2);
+TEST_F(SDLResourceTest, MoveAssignmentShouldTransferOwnershipAndCallDeleterOnOldResource) {
+    auto* raw1 = new MockResource{1};
+    auto* raw2 = new MockResource{2};
+
+    Resource res1(raw1);
+    Resource res2(raw2);
+
     res2 = std::move(res1);
+
+    EXPECT_EQ(res2.Get(), raw1);
     EXPECT_FALSE(res1.IsValid());
     EXPECT_TRUE(res2.IsValid());
-    EXPECT_EQ(res2.Get()->value, 1);
-    EXPECT_TRUE(destroyed2);
-    EXPECT_FALSE(destroyed1);
+    EXPECT_EQ(delete_call_count, 1); // raw2 silinmiş olmalı
 }
 
-TEST(SDLResourceTest, Release_ShouldReleaseOwnership) {
-    bool destroyed = false;
-    auto* raw = new DummySDLType{123, &destroyed};
-    DummyResource res(raw);
-    DummySDLType* released = res.Release();
+TEST_F(SDLResourceTest, MoveAssignmentShouldHandleSelfAssignmentGracefully) {
+    auto* raw = new MockResource{42};
+    Resource res(raw);
+    res = std::move(res); // kendi kendine move
+
+    EXPECT_EQ(res.Get(), raw); // kaynak kaybolmamalı
+    EXPECT_TRUE(res.IsValid());
+    EXPECT_EQ(delete_call_count, 0);
+}
+
+TEST_F(SDLResourceTest, ReleaseShouldReturnAndClearInternalPointer) {
+    auto* raw = new MockResource{123};
+    Resource res(raw);
+
+    auto* released = res.Release();
+
+    EXPECT_EQ(released, raw);
     EXPECT_FALSE(res.IsValid());
-    EXPECT_EQ(released->value, 123);
-    delete released;
-    EXPECT_TRUE(destroyed);
+
+    // Manuel silmek gerekir çünkü artık RAII dışı
+    MockDeleter(released);
+    EXPECT_EQ(delete_call_count, 1);
 }
 
-TEST(SDLResourceTest, BoolOperator_ShouldReflectValidity) {
-    DummyResource res1;
-    EXPECT_FALSE(res1);
-    bool destroyed = false;
-    auto* raw = new DummySDLType{0, &destroyed};
-    DummyResource res2(raw);
-    EXPECT_TRUE(res2);
-}
+TEST_F(SDLResourceTest, BoolConversionShouldReflectValidity) {
+    Resource valid(new MockResource{});
+    Resource invalid(nullptr);
 
-TEST(SDLResourceTest, CopyConstructorAndAssignment_ShouldBeDeleted) {
-    DummyResource res;
-    SUCCEED();
+    EXPECT_TRUE(valid);
+    EXPECT_FALSE(invalid);
 }
