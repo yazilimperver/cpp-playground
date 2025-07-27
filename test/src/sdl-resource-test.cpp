@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <sdl-resource.h>
+#include "sdl-resource.h"
 
 // Sahte kaynak ve silici (deleter) fonksiyon
 struct MockResource {

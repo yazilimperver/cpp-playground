@@ -72,6 +72,7 @@ bld/
 
 coverage_report/
 gcovr_report/
+coverage.info
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
