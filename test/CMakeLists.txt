@@ -20,6 +20,11 @@ add_executable(${TEST_TARGET_NAME}
     src/sdl-resource-test.cpp
     src/sdl-renderer-test.cpp
     src/sdl-application-test.cpp
+    src/components-component-test.cpp
+    src/components-transform-test.cpp
+    src/components-velocity-test.cpp
+    src/components-render-test.cpp
+    src/event-system-test.cpp
 )
 
 # GoogleTest icin en az C++14
@@ -33,6 +38,7 @@ target_link_libraries(${TEST_TARGET_NAME}
     GTest::gtest_main 
     GTest::gmock
     sdl3-example-app-lib
+    SDL3::SDL3 
 )
 
 include(GoogleTest)
