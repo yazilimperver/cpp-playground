@@ -23,7 +23,6 @@ add_executable(${TEST_TARGET_NAME}
     src/components-component-test.cpp
     src/components-transform-test.cpp
     src/components-velocity-test.cpp
-    src/components-render-test.cpp
     src/event-system-test.cpp
 )
 

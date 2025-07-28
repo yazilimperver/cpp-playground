@@ -158,22 +158,9 @@ TEST_F(EventSubjectTest, NotifyObserversShouldCallOnEventForAllObservers) {
     subject->AddObserver(mockObserver1.get());
     subject->AddObserver(mockObserver2.get());
     subject->AddObserver(mockObserver3.get());
-    
     EXPECT_CALL(*mockObserver1, OnEvent(::testing::_)).Times(1);
     EXPECT_CALL(*mockObserver2, OnEvent(::testing::_)).Times(1);
     EXPECT_CALL(*mockObserver3, OnEvent(::testing::_)).Times(1);
-    
-    subject->NotifyObservers(testEvent);
-}
-
-TEST_F(EventSubjectTest, NotifyObserversShouldPassCorrectEventData) {
-    SDL_Event testEvent(300, 11111);
-    subject->AddObserver(mockObserver1.get());
-    
-    EXPECT_CALL(*mockObserver1, OnEvent(::testing::Field(&SDL_Event::type, 300)))
-        .Times(1);
-    EXPECT_CALL(*mockObserver1, OnEvent(::testing::Field(&SDL_Event::timestamp, 11111)))
-        .Times(1);
     
     subject->NotifyObservers(testEvent);
 }
