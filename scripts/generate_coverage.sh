@@ -5,7 +5,7 @@ build/test/sdl3-example-app-tests
 rm -rf coverage_report
 
 # Kapsamı topla
-lcov --capture --directory . --output-file coverage.info      
+lcov --capture --directory build/test --output-file coverage.info
 
 # Test kodunu hariç tut (opsiyonel)
 lcov --remove coverage.info '*test*' '/usr/*' --output-file coverage_filtered.info

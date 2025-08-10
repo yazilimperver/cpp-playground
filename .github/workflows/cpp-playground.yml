@@ -130,6 +130,7 @@ jobs:
       run: |
         cd build/test
         ctest --output-on-failure --output-junit test-results.xml
+        cd ../..
       shell: bash   
     
     # Bu adim ile Artifacts altinda test sonuçları gorunecek
@@ -139,37 +140,16 @@ jobs:
       with:
           name: ctest-results
           path: build/test/test-results.xml   
- # ------------------------
-    # Coverage Analizi (lcov)
-    # ------------------------
-    - name: Generate coverage report (lcov)
-      if: runner.os == 'Linux'
-      run: |
-        # Başlangıç sıfırlama
-        lcov --directory build --zerocounters
-        # Coverage verilerini topla
-        lcov --directory build --capture --output-file coverage.info
-        # Sistem dosyalarını hariç tut
-        lcov --remove coverage.info '/usr/*' '/opt/*' '*/test/*' --output-file coverage.info
-        # HTML raporu üret
-        genhtml coverage.info --output-directory coverage_html
-      shell: bash
-
-    - name: Upload coverage artifacts
-      if: runner.os == 'Linux'
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage-html
-        path: coverage_html
 
     # ------------------------
-    # Alternatif: gcovr (HTML+XML)
+    # gcovr (HTML+XML)
     # ------------------------
     - name: Generate coverage report (gcovr)
       if: runner.os == 'Linux'
       run: |
-        gcovr --root . --xml-pretty --output coverage.xml
-        gcovr --root . --html --html-details -o coverage.html
+        mkdir gcovr_report
+        gcovr --root . --xml-pretty --output gcovr_report/coverage.xml
+        gcovr --root . --html --html-details -o gcovr_report/coverage.html
       shell: bash
 
     - name: Upload gcovr report
@@ -178,8 +158,8 @@ jobs:
       with:
         name: gcovr-report
         path: |
-          coverage.xml
-          coverage.html
+          gcovr_report/coverage.xml
+          gcovr_report/coverage.html
     
     # - name: VcPkg Installation
     #   if: runner.os == 'Windows'
