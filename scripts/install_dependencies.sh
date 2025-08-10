@@ -49,7 +49,7 @@ DownloadAndInstallSDL3Libraries(){
     mkdir sdl3
     cd sdl3
 
-    DownloadAndInstallSDL3Item SDL3 SDL3-3.2.14 https://github.com/libsdl-org/SDL/releases/download/release-3.2.14/SDL3-3.2.14.tar.gz
+    DownloadAndInstallSDL3Item SDL3 SDL3-3.2.20 https://github.com/libsdl-org/SDL/releases/download/release-3.2.20/SDL3-3.2.20.tar.gz
     DownloadAndInstallSDL3Item SDL3-Image SDL3_image-3.2.4 https://github.com/libsdl-org/SDL_image/releases/download/release-3.2.4/SDL3_image-3.2.4.tar.gz
     DownloadAndInstallSDL3Item SDL3-TTF SDL3_ttf-3.2.2 https://github.com/libsdl-org/SDL_ttf/releases/download/release-3.2.2/SDL3_ttf-3.2.2.tar.gz
 
@@ -71,4 +71,4 @@ sudo apt-get install build-essential git make \
 
 DownloadAndInstallSDL3Libraries
 
-echo Linux için kontroller ve kurulumlar tamamlandı
+echo Linux için kontroller ve kurulumlar tamamlandı
