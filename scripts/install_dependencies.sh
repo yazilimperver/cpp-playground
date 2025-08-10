@@ -36,7 +36,7 @@ DownloadAndInstallSDL3Item(){
     tar -xvf $2.tar.gz
     rm $2.tar.gz*
     cd $2
-    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDL_UNIX_CONSOLE_BUILD=ON
     cmake --build build --config Release --parallel
     sudo cmake --install build --config Release --prefix /usr/local
 
@@ -50,8 +50,8 @@ DownloadAndInstallSDL3Libraries(){
     cd sdl3
 
     DownloadAndInstallSDL3Item SDL3 SDL3-3.2.20 https://github.com/libsdl-org/SDL/releases/download/release-3.2.20/SDL3-3.2.20.tar.gz
-    DownloadAndInstallSDL3Item SDL3-Image SDL3_image-3.2.4 https://github.com/libsdl-org/SDL_image/releases/download/release-3.2.4/SDL3_image-3.2.4.tar.gz
-    DownloadAndInstallSDL3Item SDL3-TTF SDL3_ttf-3.2.2 https://github.com/libsdl-org/SDL_ttf/releases/download/release-3.2.2/SDL3_ttf-3.2.2.tar.gz
+    # DownloadAndInstallSDL3Item SDL3-Image SDL3_image-3.2.4 https://github.com/libsdl-org/SDL_image/releases/download/release-3.2.4/SDL3_image-3.2.4.tar.gz
+    # DownloadAndInstallSDL3Item SDL3-TTF SDL3_ttf-3.2.2 https://github.com/libsdl-org/SDL_ttf/releases/download/release-3.2.2/SDL3_ttf-3.2.2.tar.gz
 
     echo "#################  SDL - END  ######################"    
 }
