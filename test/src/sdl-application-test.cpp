@@ -79,8 +79,11 @@ public:
     MOCK_METHOD(std::unique_ptr<GraphicalObject>, CreateTriangle, (int x, int y), ());
 };
 
-class MockRenderer {
+class MockRendererForApp {
 public:
+    MockRendererForApp(){
+        
+    }
     MOCK_METHOD(void, Initialize, (SDL_Renderer* renderer), ());
     MOCK_METHOD(void, Shutdown, (), ());
     MOCK_METHOD(void, Clear, (const SDL_Color& color), ());
@@ -97,7 +100,7 @@ private:
     std::unique_ptr<ISDLRenderer> mSDLRenderer;
     std::unique_ptr<ISDLEvent> mSDLEvent;
     std::unique_ptr<MockEventSubject> mEventSubject;
-    std::unique_ptr<MockRenderer> mRenderer;
+    std::unique_ptr<MockRendererForApp> mRenderer;
     std::vector<std::unique_ptr<MockGraphicalObject>> mGraphicalObjects;
     std::chrono::high_resolution_clock::time_point mLastTime;
     SDL_Window* mWindow = nullptr;
@@ -110,7 +113,7 @@ public:
         std::unique_ptr<ISDLRenderer> sdlRenderer,
         std::unique_ptr<ISDLEvent> sdlEvent,
         std::unique_ptr<MockEventSubject> eventSubject,
-        std::unique_ptr<MockRenderer> renderer)
+        std::unique_ptr<MockRendererForApp> renderer)
         : mSDLSystem(std::move(sdlSystem))
         , mSDLWindow(std::move(sdlWindow))
         , mSDLRenderer(std::move(sdlRenderer))
@@ -212,7 +215,7 @@ protected:
         mockSDLRenderer = std::make_unique<MockSDLRenderer>();
         mockSDLEvent = std::make_unique<MockSDLEvent>();
         mockEventSubject = std::make_unique<MockEventSubject>();
-        mockRenderer = std::make_unique<MockRenderer>();
+        mockRenderer = std::make_unique<MockRendererForApp>();
 
         // Keep raw pointers for expectations
         mockSDLSystemPtr = mockSDLSystem.get();
@@ -241,7 +244,7 @@ protected:
     MockSDLRenderer* mockSDLRendererPtr;
     MockSDLEvent* mockSDLEventPtr;
     MockEventSubject* mockEventSubjectPtr;
-    MockRenderer* mockRendererPtr;
+    MockRendererForApp* mockRendererPtr;
 
     SDL_Window* mockWindow;
     SDL_Renderer* mockRendererHandle;
@@ -252,7 +255,7 @@ private:
     std::unique_ptr<MockSDLRenderer> mockSDLRenderer;
     std::unique_ptr<MockSDLEvent> mockSDLEvent;
     std::unique_ptr<MockEventSubject> mockEventSubject;
-    std::unique_ptr<MockRenderer> mockRenderer;
+    std::unique_ptr<MockRendererForApp> mockRenderer;
 };
 
 // Initialize Tests

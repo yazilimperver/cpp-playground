@@ -4,9 +4,12 @@
 #include "components.h"
 
 // Mock classes for dependencies
-class MockRenderer {
+class MockRendererForTransform {
 public:
-    virtual ~MockRenderer() = default;
+    MockRendererForTransform(){
+        
+    }
+    virtual ~MockRendererForTransform() = default;
 };
 
 class MockGraphicalObject {
@@ -18,11 +21,11 @@ public:
 class TransformTest : public ::testing::Test {
 protected:
     void SetUp() override {
-        mockRenderer = std::make_unique<MockRenderer>();
+        mockRenderer = std::make_unique<MockRendererForTransform>();
         mockGraphicalObject = std::make_unique<MockGraphicalObject>();
     }
 
-    std::unique_ptr<MockRenderer> mockRenderer;
+    std::unique_ptr<MockRendererForTransform> mockRenderer;
     std::unique_ptr<MockGraphicalObject> mockGraphicalObject;
 };
 

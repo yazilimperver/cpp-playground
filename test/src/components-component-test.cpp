@@ -2,15 +2,14 @@
 #include <gmock/gmock.h>
 #include <memory>
 #include "components.h"
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
-#include <memory>
-#include "components.h"
 
 // Mock classes to avoid dependencies
-class MockRenderer {
+class MockRendererForComponent {
 public:
-    virtual ~MockRenderer() = default;
+    MockRendererForComponent(){
+        
+    }
+    virtual ~MockRendererForComponent() = default;
     MOCK_METHOD(void, MockRenderMethod, (), ());
 };
 
@@ -27,7 +26,7 @@ public:
     mutable int updateCallCount = 0;
     mutable int renderCallCount = 0;
     mutable float lastDeltaTime = 0.0f;
-    mutable MockRenderer* lastRenderer = nullptr;
+    mutable MockRendererForComponent* lastRenderer = nullptr;
 
     void Update(float deltaTime) override {
         updateCallCount++;
@@ -36,7 +35,7 @@ public:
 
     void Render(Renderer& renderer) override {
         renderCallCount++;
-        lastRenderer = reinterpret_cast<MockRenderer*>(&renderer);
+        lastRenderer = reinterpret_cast<MockRendererForComponent*>(&renderer);
     }
 };
 
@@ -51,13 +50,13 @@ public:
 class ComponentTest : public ::testing::Test {
 protected:
     void SetUp() override {
-        mockRenderer = std::make_unique<MockRenderer>();
+        mockRenderer = std::make_unique<MockRendererForComponent>();
         mockGraphicalObject = std::make_unique<MockGraphicalObject>();
         testableComponent = std::make_unique<TestableComponent>();
         mockComponent = std::make_unique<::testing::StrictMock<MockComponent>>();
     }
 
-    std::unique_ptr<MockRenderer> mockRenderer;
+    std::unique_ptr<MockRendererForComponent> mockRenderer;
     std::unique_ptr<MockGraphicalObject> mockGraphicalObject;
     std::unique_ptr<TestableComponent> testableComponent;
     std::unique_ptr<::testing::StrictMock<MockComponent>> mockComponent;
