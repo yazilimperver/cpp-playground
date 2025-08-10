@@ -148,8 +148,8 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         mkdir gcovr_report
-        gcovr --root . --xml-pretty --output gcovr_report/coverage.xml
-        gcovr --root . --html --html-details -o gcovr_report/coverage.html
+        gcovr --root . --exclude GoogleTest/ --xml-pretty --output gcovr_report/coverage.xml
+        gcovr --root . --exclude GoogleTest/ --html --html-details -o gcovr_report/coverage.html
       shell: bash
 
     - name: Upload gcovr report
