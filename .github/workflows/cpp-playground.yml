@@ -114,15 +114,15 @@ jobs:
     #     install_for_windows.bat
     #   shell: cmd
     
-    # - name: Build uEngine4 Linux
-    #   id: build_uengine4_linux
-    #   if: runner.os == 'Linux'
-    #   run: |
-    #     git submodule update --init --recursive
-    #     cd code
-    #     chmod 700 ./scripts/buildLinux.sh
-    #     ./scripts/buildLinux.sh
-    #   shell: bash      
+    - name: Build and Execute Tests Linux
+      id: build_uengine4_linux
+      if: runner.os == 'Linux'
+      run: |
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+        cmake --build build
+        cd build/test
+        ctest --output-on-failure
+      shell: bash      
     
     # - name: VcPkg Installation
     #   if: runner.os == 'Windows'
