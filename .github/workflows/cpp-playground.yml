@@ -142,9 +142,11 @@ jobs:
     # Test sonuclarini yayinlamak icin kullanacagim adimlar
     - name: Publish Test Results
       if: runner.os == 'Linux'
-      uses: actions/upload-test-results@v1
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
       with:
-          files: build/test-results.xml
+        files: |
+          build/test/test-results.xml
     
     # - name: VcPkg Installation
     #   if: runner.os == 'Windows'
