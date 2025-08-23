@@ -120,7 +120,7 @@ jobs:
       id: build_uengine4_windows
       if: runner.os == 'Windows'
       run: |
-        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_PREFIX_PATH=%CD%\sdl3-install
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_PREFIX_PATH=%CD%\..\..\sdl3-install
         cd build_ninja
         ninja
         cd ..
