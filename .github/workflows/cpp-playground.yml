@@ -19,12 +19,12 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        #  - {
-        #     name: "SDL3 CppPlayground Build on Windows Latest MSVC", artifact: "Windows-MSVC",
-        #     os: windows-latest,
-        #     cc: "cl", cxx: "cl",
-        #     environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-        #   }
+         - {
+            name: "SDL3 CppPlayground Build on Windows Latest MSVC", artifact: "Windows-MSVC",
+            os: windows-latest,
+            cc: "cl", cxx: "cl",
+            environment_script: "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+           }
          - {
             name: "SDL3 CppPlayground Build on Ubuntu Latest GCC", artifact: "Linux",
             os: ubuntu-latest,
@@ -33,10 +33,33 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # - name: Greeting-Windows
-    #   if: runner.os == 'Windows'
-    #   run: |
-    #     echo "Cpp Playground Github Actions started from Windows!"
+    - name: Greeting-Windows
+      if: runner.os == 'Windows'
+      run: |
+        echo "Cpp Playground Github Actions started from Windows!"
+
+    - name: Configure build for amd64
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: amd64
+
+    - name: Install Other 3rd Party Dependencies - Windows
+      id: external_libraries_win
+      if: runner.os == 'Windows'
+      run: |
+        .\scripts\install_dependencies.bat
+      shell: cmd      
+
+    - name: Build uEngine4 Windows
+      id: build_uengine4_windows
+      if: runner.os == 'Windows'
+      run: |
+        cmake -S . -B build_ninja -G "Ninja"
+        cd build_ninja
+        ninja
+        cd ..
+      shell: cmd
 
     - name: Greeting-Linux
       if: runner.os == 'Linux'
@@ -101,26 +124,13 @@ jobs:
         chmod 700 scripts/install_dependencies.sh
         scripts/install_dependencies.sh
       shell: bash
-    
-    # - name: Configure build for amd64
-    #   if: runner.os == 'Windows'
-    #   uses: ilammy/msvc-dev-cmd@v1
-    #   with:
-    #     arch: amd64
 
-    # - name: Install Other 3rd Party Dependencies - Windows
-    #   id: external_libraries_win
-    #   if: runner.os == 'Windows'
-    #   run: |
-    #     install_for_windows.bat
-    #   shell: cmd
-    
     - name: Configure Application
       if: runner.os == 'Linux'
       run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
       shell: bash      
       
-    - name: Build Application
+    - name: Build Linux Application
       if: runner.os == 'Linux'
       run: cmake --build build
       shell: bash      
@@ -167,25 +177,4 @@ jobs:
       with:
           name: application-linux-x64
           path: build/app/sdl3-example-app   
-
-    # - name: VcPkg Installation
-    #   if: runner.os == 'Windows'
-    #   run: |
-    #     git clone https://github.com/microsoft/vcpkg.git
-    #     cd vcpkg
-    #     bootstrap-vcpkg.bat
-    #     vcpkg integrate install
-    #     vcpkg install opengl glew --triplet=x64-windows-static
-
-    # - name: Build uEngine4 Windows
-    #   id: build_uengine4_windows
-    #   if: runner.os == 'Windows'
-    #   run: |
-    #     git submodule update --init --recursive
-    #     cd code
-    #     cmake -S . -B build_ninja -G "Ninja"
-    #     cd build_ninja
-    #     ninja
-    #     cd ..
-    #   shell: cmd
   
