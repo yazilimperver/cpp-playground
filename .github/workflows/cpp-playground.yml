@@ -38,6 +38,11 @@ jobs:
       run: |
         echo "Cpp Playground Github Actions started from Windows!"
 
+    - name: Greeting-Linux
+      if: runner.os == 'Linux'
+      run: |
+        echo "Cpp Playground Github Actions started from Linux!"   
+
     - name: Configure build for amd64
       if: runner.os == 'Windows'
       uses: ilammy/msvc-dev-cmd@v1
@@ -51,21 +56,6 @@ jobs:
         .\scripts\install_dependencies.bat
       shell: cmd      
 
-    - name: Build uEngine4 Windows
-      id: build_uengine4_windows
-      if: runner.os == 'Windows'
-      run: |
-        cmake -S . -B build_ninja -G "Ninja"
-        cd build_ninja
-        ninja
-        cd ..
-      shell: cmd
-
-    - name: Greeting-Linux
-      if: runner.os == 'Linux'
-      run: |
-        echo "Cpp Playground Github Actions started from Linux!"    
-
     - name: Linux Dependencies
       if: runner.os == 'Linux'
       run: |
@@ -73,6 +63,7 @@ jobs:
         sudo apt install lcov gcovr -y
 
     - name: Download Ninja and CMake
+      if: runner.os == 'Linux'
       shell: cmake -P {0}
       run: |
         set(cmake_version $ENV{CMAKE_VERSION})
@@ -125,7 +116,17 @@ jobs:
         scripts/install_dependencies.sh
       shell: bash
 
-    - name: Configure Application
+    - name: Configure and Build Application for Windows
+      id: build_uengine4_windows
+      if: runner.os == 'Windows'
+      run: |
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DPREFIX_PATH=.\\sdl3-win-install
+        cd build_ninja
+        ninja
+        cd ..
+      shell: cmd 
+
+    - name: Configure Application for Linux
       if: runner.os == 'Linux'
       run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
       shell: bash      
