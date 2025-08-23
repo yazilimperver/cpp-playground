@@ -122,8 +122,8 @@ jobs:
       run: |
         echo %CD%
         echo %CD%\..\..\sdl3-install
-        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_PREFIX_PATH=%CD%\..\..\sdl3-install
-        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_PREFIX_PATH=%CD%\..\..\sdl3-install\cmake
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_PREFIX_PATH=%CD%\sdl3-install
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_PREFIX_PATH=%CD%\sdl3-install\cmake
         cd build_ninja
         ninja
         cd ..
