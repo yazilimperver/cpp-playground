@@ -4,6 +4,10 @@
 .class
 .o
 
+# SDL download folders
+sdl3*/**
+sdl3/**
+
 ### Mac ###
 .DS_Store
 
