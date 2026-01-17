@@ -63,7 +63,7 @@ tar -xvf %~2.tar.gz
 cd %~2
 cd
 echo %CD%\..\..\sdl3-install
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G Ninja -DSDL_TESTS=OFF -DCMAKE_INSTALL_PREFIX=%CD%\..\..\sdl3-install -DCMAKE_PREFIX_PATH=%CD%\..\..\sdl3-install
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDL_STATIC=ON -G Ninja -DSDL_TESTS=OFF -DCMAKE_INSTALL_PREFIX=%CD%\..\..\sdl3-install -DCMAKE_PREFIX_PATH=%CD%\..\..\sdl3-install
 cmake --build build --config Release  --target install
 cd ..
 

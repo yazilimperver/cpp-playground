@@ -1,16 +1,21 @@
 set(TARGET_NAME sdl3-example-app)
 
-add_executable(${TARGET_NAME} "")
+set(TARGET_UNIT_TEST_LIB ${TARGET_NAME}-lib)
+add_library(${TARGET_UNIT_TEST_LIB} "")
 
-set_target_properties(${TARGET_NAME}
+set_target_properties(${TARGET_UNIT_TEST_LIB}
     PROPERTIES
         CXX_STANDARD 20
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
 )
 
-target_sources(${TARGET_NAME} PRIVATE
-    src/main.cpp
+target_include_directories(${TARGET_UNIT_TEST_LIB}
+  PUBLIC  include
+  PRIVATE src
+)
+
+target_sources(${TARGET_UNIT_TEST_LIB} PRIVATE
     src/components.cpp
     src/event-system.cpp
     src/render-strategies.cpp
@@ -19,13 +24,21 @@ target_sources(${TARGET_NAME} PRIVATE
     src/graphical-object-factory.cpp
 )
 
+add_executable(${TARGET_NAME} src/main.cpp)
 target_include_directories(${TARGET_NAME}
   PUBLIC  include
   PRIVATE src
 )
 
 target_link_libraries(${TARGET_NAME}
-    PRIVATE SDL3::SDL3
+    PRIVATE SDL3::SDL3 ${TARGET_UNIT_TEST_LIB}
+)
+
+set_target_properties(${TARGET_NAME}
+    PROPERTIES
+        CXX_STANDARD 20
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
 )
 
 # Windows için gerekli DLL'leri yuklemek icin ekledigimiz komuttur

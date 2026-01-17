@@ -36,9 +36,9 @@ DownloadAndInstallSDL3Item(){
     tar -xvf $2.tar.gz
     rm $2.tar.gz*
     cd $2
-    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDL_STATIC=ON -G Ninja -DSDL_TESTS=OFF
+    cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DSDL_UNIX_CONSOLE_BUILD=ON
     cmake --build build --config Release --parallel
-    sudo cmake --install build --config Release --prefix C:/SDL3
+    sudo cmake --install build --config Release --prefix /usr/local
     
     cd ..
     echo "#################  $1 - END  ######################"

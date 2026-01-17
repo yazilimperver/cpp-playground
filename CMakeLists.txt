@@ -51,5 +51,8 @@ endif(ccache_exe )
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Alt projeler
-# add_subdirectory(lib)
 add_subdirectory(app)
+
+if(BUILD_TESTING)
+    add_subdirectory(test)    
+endif()
