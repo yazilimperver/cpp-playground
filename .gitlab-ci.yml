@@ -1,0 +1,86 @@
+variables:
+  CMAKE_VERSION: "3.29.6"
+  NINJA_VERSION: "1.12.1"
+
+stages:
+  - build
+  - test
+  - report
+
+# --- Windows Job ---
+build-windows:
+  stage: build
+  tags:
+    - windows # Windows yüklü bir runner seçer
+  variables:
+    CC: "cl"
+    CXX: "cl"
+  script:
+    - echo "Cpp Playground started from Windows!"
+    # MSVC ortamını hazırlar (vcvarsall.bat benzeri)
+    - '& "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"'
+    - .\scripts\install_dependencies.bat
+    # Build
+    - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_PREFIX_PATH="%CD%\sdl3-install"
+    - cmake --build build
+  artifacts:
+    paths:
+      - build/
+
+# --- Linux Job ---
+build-linux:
+  stage: build
+  image: ubuntu:latest
+  before_script:
+    - apt-get update && apt-get install -y cmake ninja-build gcc g++ clang-tidy lcov gcovr curl unzip
+  script:
+    - echo "Cpp Playground started from Linux!"
+    - chmod +x scripts/install_dependencies.sh
+    - ./scripts/install_dependencies.sh
+    - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja"
+    - cmake --build build
+  artifacts:
+    paths:
+      - build/
+      - scripts/
+    expire_in: 1 hour
+
+# --- Test Job (Linux üzerinden devam) ---
+test-linux:
+  stage: test
+  image: ubuntu:latest
+  dependencies:
+    - build-linux
+  before_script:
+    - apt-get update && apt-get install -y cmake ninja-build gcovr
+  script:
+    - cd build/test
+    - ctest --output-on-failure --output-junit ../../test-results.xml
+    - cd ../..
+  artifacts:
+    when: always
+    reports:
+      junit: test-results.xml
+    paths:
+      - test-results.xml
+
+# --- Coverage Report ---
+coverage-linux:
+  stage: report
+  image: ubuntu:latest
+  dependencies:
+    - build-linux
+    - test-linux
+  before_script:
+    - apt-get update && apt-get install -y gcovr
+  script:
+    - mkdir gcovr_report
+    - gcovr --root . --exclude GoogleTest/ --xml-pretty --output gcovr_report/coverage.xml
+    - gcovr --root . --exclude GoogleTest/ --html --html-details -o gcovr_report/coverage.html
+  artifacts:
+    paths:
+      - gcovr_report/
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: gcovr_report/coverage.xml
